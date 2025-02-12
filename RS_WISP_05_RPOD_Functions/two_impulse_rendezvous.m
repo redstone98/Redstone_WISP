@@ -1,4 +1,4 @@
-function [Delta_v_0, Delta_v_f, delta_r_t_mat_LVLH, delta_v_t_mat_LVLH, v_plus_ECI] = two_impulse_rendezvous(r_target, v_target, r_chaser, v_chaser, tf)
+function [Delta_v_0, Delta_v_f, delta_r_t_mat, delta_v_t_mat, v_plus_ECI, t_vector] = two_impulse_rendezvous(r_target, v_target, r_chaser, v_chaser, tf)
 
 r_0 = r_target;
 v_0 = v_target;
@@ -54,9 +54,9 @@ Delta_v_f = [0;0;0] - delta_v_f_minus;
 
 
 % Drawing Reference Chaser Trajector wrt Target
-t_vector = linspace(0,tf); % Note: you can modify steptime for this
-delta_r_t_mat_LVLH = zeros(length(t_vector),3);
-delta_v_t_mat_LVLH = zeros(length(t_vector),3);
+t_vector = linspace(0,tf);
+delta_r_t_mat = zeros(length(t_vector),3);
+delta_v_t_mat = zeros(length(t_vector),3);
 
 for timestep = 1:length(t_vector)
 
@@ -82,10 +82,10 @@ for timestep = 1:length(t_vector)
     delta_r_t = Phi_rr_t * delta_r_0 + Phi_rv_t * delta_v_0_plus;
     delta_v_t = Phi_vr_t * delta_r_0 +  Phi_vv_t * delta_v_0_plus;
 
-    delta_r_t_mat_LVLH(timestep,:) = delta_r_t';
-    delta_v_t_mat_LVLH(timestep,:) = delta_v_t';
+    delta_r_t_mat(timestep,:) = delta_r_t';
+    delta_v_t_mat(timestep,:) = delta_v_t';
 end
 
-v_plus_ECI = v_0 + cross(Omega_target, delta_r) + delta_v_0_plus\Q_LVLH_ECI;
+v_plus_ECI = v_0 + cross(Omega_target, delta_r) + inv(Q_LVLH_ECI)*delta_v_0_plus;
 
 end
