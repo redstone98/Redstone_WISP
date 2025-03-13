@@ -1,4 +1,4 @@
-function [T, time_vector, Delta_v_m_LVLH_mat, delta_r_t_mat, delta_v_t_mat, rho_t_mat, rho_dot_t_mat, delta_v_m_plus_mat] = glideslope_transfer(r_target, v_target, r_chaser, v_chaser, rho_vec_T, rho_dot_0, rho_dot_T, N)
+function [T, time_vector, Delta_t, Delta_v_m_LVLH_mat, Delta_r_m_LVLH_mat ,delta_r_t_mat, delta_v_t_mat, rho_t_mat, rho_dot_t_mat, delta_v_m_plus_mat] = glideslope_transfer(r_target, v_target, r_chaser, v_chaser, rho_vec_T, rho_dot_0, rho_dot_T, N)
 
 r_0 = r_target;
 v_0 = v_target;
@@ -62,7 +62,7 @@ delta_r_m_mat = zeros(N+1,3);
 delta_r_m_mat(1,:) = delta_r_0';
 delta_v_m_plus_mat = zeros(N,3);
 Delta_v_m_LVLH_mat = zeros(N,3);
-
+Delta_r_m_LVLH_mat = zeros(N,3);
 
 delta_r_t_mat = [];
 delta_v_t_mat = [];
@@ -89,7 +89,8 @@ delta_v_t_mat_temp = zeros(length(delta_t_vec),3);
         delta_v_m_minus_mat(m+1,:) = delta_v_m_plus_1_minus';
         delta_v_m_plus_mat(m,:) = delta_v_m_plus;
         Delta_v_m_LVLH_mat(m,:) =  (delta_v_m_plus - delta_v_m_minus_mat(m,:)')';
-        
+        Delta_r_m_LVLH_mat(m,:) = delta_r_m_plus_1';
+
         for t_index = 1:length(delta_t_vec)
     
             t = delta_t_vec(t_index);
